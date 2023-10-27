@@ -26,4 +26,4 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build Linux Natives with Maven
-        run: mvn --also-make --projects plugins/linux --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
