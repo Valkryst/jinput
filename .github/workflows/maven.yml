@@ -2,39 +2,11 @@ name: Java CI with Maven
 
 on: [push, pull_request]
 
+# https://github.com/jenkinsci/jenkinsfile-runner-github-actions
 jobs:
-  build:
+  jenkinsfile-runner-prepackaged:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 8
-          java-package: jdk
-          architecture: x64
-
-      - name: Cache Maven Packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build "applet" with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./applet/pom.xml
-
-      - name: Build "coreAPI" with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./coreAPI/pom.xml
-
-      - name: Build "examples" with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./examples/pom.xml
-
-      - name: Build "plugins" with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./plugins/pom.xml
-
-      - name: Build "tests" with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./tests/pom.xml
+      - name: jenkinsfile-runner-prepackaged
+        uses: jenkinsci/jenkinsfile-runner-github-actions/jenkinsfile-runner-prepackaged@master
