@@ -9,10 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-2204
-      - name: Setup Visual Studio Build Tools
-        run: sudo apt-get update && sudo apt-get install -y dotnet-sdk-7.0
-
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
@@ -28,5 +24,17 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
+      - name: Build "applet" with Maven
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./applet/pom.xml
+
+      - name: Build "coreAPI" with Maven
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./coreAPI/pom.xml
+
+      - name: Build "examples" with Maven
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./examples/pom.xml
+
+      - name: Build "plugins" with Maven
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./plugins/pom.xml
+
+      - name: Build "tests" with Maven
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file ./tests/pom.xml
