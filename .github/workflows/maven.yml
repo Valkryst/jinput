@@ -4,13 +4,14 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.1
+      # https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-2204
+      - name: Setup Visual Studio Build Tools
+        run: sudo apt-get update && sudo apt-get install -y dotnet-sdk-7.0
 
       - name: Setup JDK
         uses: actions/setup-java@v3
@@ -28,4 +29,4 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots -D"maven.javadoc.skip=true" verify --file pom.xml
+        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
