@@ -4,13 +4,10 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install OpenCL Headers
-        run: sudo apt-get install opencl-headers
 
       # https://github.com/marketplace/actions/setup-java-jdk
       - name: Setup JDK
@@ -28,5 +25,5 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
+      - name: Build Linux Natives with Maven
+        run: mvn --also-make --projects plugins/linux --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml
