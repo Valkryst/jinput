@@ -2,11 +2,34 @@ name: Java CI with Maven
 
 on: [push, pull_request]
 
-# https://github.com/jenkinsci/jenkinsfile-runner-github-actions
 jobs:
-  jenkinsfile-runner-prepackaged:
+  build:
     runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/jenkinsci/jenkinsfile-runner:master
+
     steps:
       - uses: actions/checkout@v4
-      - name: jenkinsfile-runner-prepackaged
-        uses: jenkinsci/jenkinsfile-runner-github-actions/jenkinsfile-runner-prepackaged@master
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 8
+          java-package: jdk
+          architecture: x64
+
+      - name: Cache Maven Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Jenkinsfile Runner
+        uses:
+          jenkinsci/jfr-container-action@master
+        with:
+          command: run
+          jenkinsfile: Jenkinsfile
